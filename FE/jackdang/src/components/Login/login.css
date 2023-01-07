@@ -1,0 +1,44 @@
+.jackdang-title {
+    display: flex;
+}
+
+.jackdang-title .title-name {
+    position: absolute;
+
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 60px;
+    line-height: 73px;
+
+    color: #000000;
+}
+
+.loginbox .inputPhone, .inputPassword {
+    box-sizing: border-box;
+
+    position: absolute;
+    left: 0%;
+    right: 0%;
+    top: 0%;
+    bottom: 0%;
+
+    /* Background/White */
+
+    background: linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0) 100%), #FFFFFF;
+    /* Black/Light Black */
+
+    border: 1px solid #AAB0B7;
+    border-radius: 8px;
+}
+
+.btn-login {
+    position: absolute;
+    left: 0%;
+    right: 0%;
+    top: 0%;
+    bottom: 0%;
+
+    background: #848484;
+    border-radius: 8px;
+}
