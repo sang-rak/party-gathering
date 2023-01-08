@@ -21,8 +21,6 @@ public class MemberDto {
 	private String password;
 	// @Column(nullable = false, unique = true)
 	private String nickname;
-	private String username; // 로그인 아이디
-	private String membership; // 회원 등급
 	// @Column(nullable = false)
 	private int age;
 	private String gender;
@@ -142,14 +140,4 @@ public class MemberDto {
             this.id = id;
         }
     }
-
-	public void setPassword(String password) {
-		// TODO Auto-generated method stub
-
-	}
-    
-	public void setMembership(String string) {
-		// TODO Auto-generated method stub
-
-	}
 }

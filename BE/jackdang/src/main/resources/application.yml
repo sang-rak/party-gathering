@@ -33,3 +33,14 @@ jwt:
 logging.level:
   org.hibernate.SQL: debug
   # org.hibernate.type: trace
+
+security:
+  oauth2:
+    client:
+      registration:
+        google:
+          client-id: 398316070930-ah4ifo4ule8n1ua1ne062tfmtpribbl5.apps.googleusercontent.com
+          client-secret: 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
+          scope:
+          - email
+          - profile

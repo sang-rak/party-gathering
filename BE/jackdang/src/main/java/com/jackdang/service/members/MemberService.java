@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import com.jackdang.controller.members.dto.MemberDto;
 import com.jackdang.domain.entity.members.Member;
 import com.jackdang.domain.repository.members.MemberRepository;
@@ -19,8 +18,6 @@ public class MemberService {
 	
 
 	private final MemberRepository memberRepository;
-	
-
 	
 	/*
 	 *  회원 가입
@@ -59,4 +56,15 @@ public class MemberService {
 		return memberId;
 	};
 
+	// 로그인
+	public boolean login(String phone, String password){
+		List<Member> findMembers = memberRepository.findByPhone(phone);
+		if (findMembers.isEmpty()){
+			return false;
+		}
+		if ( !password.equals(findMembers.get(0).getPassword()) ){
+			return false;
+		}
+		return true;
+	}
 }

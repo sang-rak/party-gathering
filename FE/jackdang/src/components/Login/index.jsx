@@ -117,6 +117,7 @@ const Login = () => {
           </Button>
         </Row>
       </Form>
+      <a href="/oauth2/authorization/google">구글로그인</a>
     </Container>
   );
 };

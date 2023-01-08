@@ -7,14 +7,15 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import com.jackdang.common.auth.JwtAuthProvider;
+import com.jackdang.controller.members.dto.AuthDto.AuthLoginRequest;
+import com.jackdang.controller.members.dto.AuthDto.AuthLoginResponse;
 import com.jackdang.controller.members.dto.MemberDto;
 import com.jackdang.controller.members.dto.MemberDto.*;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import com.jackdang.domain.entity.members.Member;
-import com.jackdang.domain.repository.members.MemberRepository;
 import com.jackdang.service.members.MemberService;
 
 import lombok.RequiredArgsConstructor;
@@ -23,9 +24,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+	private final JwtAuthProvider jwtAuthProvider;
 
-
+    
     /*
      * 회원가입
      * param: phone, password, nickname, gender, age, marketing_agree
@@ -33,7 +34,6 @@ public class MemberController {
      */
     @PostMapping("/api/v1/members")
     public Long saveMemberV1(@RequestBody MemberDto memberDto) {
-    	//memberDto.setPassword(bCryptPasswordEncoder.encode(memberDto.getPassword()));
     	return memberService.save(memberDto);
     }
     
@@ -73,4 +73,22 @@ public class MemberController {
     }
 
 
+	/**
+	 * 회원 로그인
+	 */
+	@PostMapping("/api/excludePath/login")
+    public AuthLoginResponse loginMember(@RequestBody AuthLoginRequest request, HttpServletResponse response){
+
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime exp = now.plusDays(1L); // 만료기간 1일
+
+		String status = "F";
+		// 계정정보 존재 및 일치 여부 확인
+		if ( memberService.login(request.getPhone(), request.getPassword()) ){
+			String token = jwtAuthProvider.createToken(request, now, exp); // 토큰 생성
+			response.setHeader("jwt-auth-token", token);
+			status = "S";
+		}
+		return new AuthLoginResponse(request.getPhone(), status);
+	}
 }
