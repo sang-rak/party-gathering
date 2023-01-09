@@ -1,6 +1,6 @@
 import { StyledTitle } from "./styles";
 import { memo } from "react";
-
+import jwt_decode from "jwt-decode";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/Container";
@@ -19,7 +19,8 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const [success, setSuccess] = useState(false);
-
+  // google user
+  const [user, setUser] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,6 +31,35 @@ const Login = () => {
   useEffect(() => {
     setErrMsg("");
   }, [phone, password]);
+
+  // google login
+  useEffect(() => {
+    /* global google */
+    google.accounts.id.initialize({
+      client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
+      callback: handleCallbackResponse,
+    });
+
+    google.accounts.id.renderButton(document.getElementById("signInDiv"), {
+      theme: "outline",
+      size: "large",
+    });
+
+    google.accounts.id.prompt();
+  }, []);
+
+  function handleCallbackResponse(response) {
+    console.log("Encoded JWT ID token: " + response.credential);
+    const userObject = jwt_decode(response.credential);
+    console.log(userObject);
+    setUser(userObject);
+    document.getElementById("signInDiv").hidden = true;
+  }
+
+  function handleSignOut(event) {
+    setUser({});
+    document.getElementById("signInDiv").hidden = false;
+  }
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -117,7 +147,17 @@ const Login = () => {
           </Button>
         </Row>
       </Form>
-      <a href="/oauth2/authorization/google">구글로그인</a>
+      <div id="signInDiv"></div>
+      {Object.keys(user).length != 0 && (
+        <button onClick={(e) => handleSignOut(e)}>Sign Out</button>
+      )}
+
+      {user && (
+        <div>
+          <img src={user.picture}></img>
+          <h3>{user.name}</h3>
+        </div>
+      )}
     </Container>
   );
 };
